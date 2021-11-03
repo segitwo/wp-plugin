@@ -45,15 +45,15 @@ class InterviewPlugin {
 		update_field( "size", esc_attr( $_POST["size"] ), $post_id );
 		update_field( "color", esc_attr( $_POST["color"] ), $post_id );
 		update_field( "sex", esc_attr( $_POST["sex"] ), $post_id );
-		wp_set_object_terms($post_id, explode( ",", esc_attr( $_POST["type"] ) ), "clothes-type");
+		wp_set_object_terms( $post_id, explode( ",", esc_attr( $_POST["type"] ) ), "clothes-type" );
 
 		if ( $_FILES ) {
 			require_once( ABSPATH . "wp-admin" . "/includes/image.php" );
 			require_once( ABSPATH . "wp-admin" . "/includes/file.php" );
 			require_once( ABSPATH . "wp-admin" . "/includes/media.php" );
 			$file_handler = "thumbnail";
-			$attach_id    = media_handle_upload( $file_handler, 0);
-			set_post_thumbnail($post_id, $attach_id);
+			$attach_id    = media_handle_upload( $file_handler, 0 );
+			set_post_thumbnail( $post_id, $attach_id );
 		}
 		wp_die();
 	}
