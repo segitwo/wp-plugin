@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: Interview Plugin
+Plugin Name: Simple Plugin
 Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
 Description: Simple plugin
 Version: 1.0
@@ -12,19 +12,19 @@ License: A "Slug" license name e.g. GPL2
 
 defined( "ABSPATH" ) || exit;
 
-class InterviewPlugin {
+class SimplePlugin {
 
 	static function register() {
 		add_action( "init",
-			[ InterviewPlugin::class, "register_clothes_cpt" ] );
+			[ SimplePlugin::class, "register_clothes_cpt" ] );
 		add_action( "init",
-			[ InterviewPlugin::class, "register_clothes_type" ] );
+			[ SimplePlugin::class, "register_clothes_type" ] );
 		add_action( 'wp_ajax_add_clothes',
-			[ InterviewPlugin::class, 'add_clothes_ajax' ] );
+			[ SimplePlugin::class, 'add_clothes_ajax' ] );
 		add_filter( "template_include",
-			[ InterviewPlugin::class, "template_include_filter" ] );
+			[ SimplePlugin::class, "template_include_filter" ] );
 		add_filter( 'option_posts_per_page',
-			[ InterviewPlugin::class, 'clothes_type_posts_per_page' ] );
+			[ SimplePlugin::class, 'clothes_type_posts_per_page' ] );
 	}
 
 	static function add_clothes_ajax() {
@@ -154,8 +154,8 @@ class InterviewPlugin {
 
 }
 
-InterviewPlugin::register();
+SimplePlugin::register();
 
-register_activation_hook( __FILE__, [ InterviewPlugin::class, "activation" ] );
+register_activation_hook( __FILE__, [ SimplePlugin::class, "activation" ] );
 register_activation_hook( __FILE__,
-	[ InterviewPlugin::class, "deactivation" ] );
+	[ SimplePlugin::class, "deactivation" ] );
