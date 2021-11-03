@@ -28,7 +28,34 @@ class InterviewPlugin {
 	}
 
 	static function add_clothes_ajax() {
-		#TODO Сделать добавление товара через AJAX
+//				var_dump( $_POST );
+		if ( ! isset( $_POST["nonce"] ) ||
+		     ! wp_verify_nonce( $_POST["nonce"], "interview-plugin" ) ) {
+			wp_die();
+		}
+
+		$post_id = wp_insert_post( [
+			"post_author"  => esc_attr( $_POST["user_id"] ),
+			"post_title"   => esc_attr( $_POST["title"] ),
+			"post_content" => esc_attr( $_POST["description"] ),
+			"post_type"    => "clothes",
+			"post_status"  => "publish",
+		] );
+
+		update_field( "size", esc_attr( $_POST["size"] ), $post_id );
+		update_field( "color", esc_attr( $_POST["color"] ), $post_id );
+		update_field( "sex", esc_attr( $_POST["sex"] ), $post_id );
+		wp_set_object_terms($post_id, explode( ",", esc_attr( $_POST["type"] ) ), "clothes-type");
+
+		if ( $_FILES ) {
+			require_once( ABSPATH . "wp-admin" . "/includes/image.php" );
+			require_once( ABSPATH . "wp-admin" . "/includes/file.php" );
+			require_once( ABSPATH . "wp-admin" . "/includes/media.php" );
+			$file_handler = "thumbnail";
+			$attach_id    = media_handle_upload( $file_handler, 0);
+			set_post_thumbnail($post_id, $attach_id);
+		}
+		wp_die();
 	}
 
 	static function clothes_type_posts_per_page() {
@@ -81,7 +108,10 @@ class InterviewPlugin {
 				wp_enqueue_script( 'add-clothes-ajax',
 					plugins_url( '/js/add_clothes.js', __FILE__ ) );
 				wp_localize_script( 'add-clothes-ajax', 'ACAjax',
-					array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+					array(
+						'ajaxurl' => admin_url( 'admin-ajax.php' ),
+						'nonce'   => wp_create_nonce( 'interview-plugin' )
+					) );
 			}
 			if ( file_exists( TEMPLATEPATH . "/" . $template_filename ) ) {
 				return TEMPLATEPATH . "/" . $template_filename;

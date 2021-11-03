@@ -5,10 +5,6 @@ get_header();
 
 $terms = get_terms( "clothes-type" );
 
-$term = get_term_by(
-	"slug", get_query_var( 'term' ), get_query_var( 'taxonomy' )
-);
-
 $args = [
 	"post_type"      => "clothes",
 	"posts_per_page" => 10,
@@ -68,6 +64,7 @@ $query = new WP_query( $args );
                     <h2>Add Clothes</h2>
                     <form id="add-clothes-form" action="" method="post"
                           enctype="multipart/form-data">
+                        <input id="user-id" type="hidden" name="user_id" value="<?php echo $user->ID; ?>">
                         <div class="form-group">
                             <label for="clothes-title">
                                 Title:
@@ -114,7 +111,18 @@ $query = new WP_query( $args );
                             <input id="clothes-sex" class="form-control" type=""
                                    name="sex">
                         </div>
-                        <!--                 clothes-type (as multiselect) fields.-->
+                        <div class="form-group">
+                            <label for="clothes-type">
+                                Type:
+                            </label>
+                            <select id="clothes-type" name="clothes-type" class="form-control" multiple>
+								<?php
+								$terms = get_terms( "clothes-type", [ "hide_empty" => false ] );
+								foreach ( $terms as $term ): ?>
+                                    <option value="<?php echo $term->name; ?>"><?php echo $term->name; ?></option>
+								<?php endforeach; ?>
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save
                         </button>
                     </form>
